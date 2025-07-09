@@ -1,0 +1,25 @@
+build:
+  python_version: "3.10"
+  python_packages:
+    - torch
+    - torchvision
+    - transformers
+    - insightface==0.7.3
+    - gdown
+    - replicate
+    - requests
+    - basicsr
+    - facexlib
+    - opencv-python
+    - timm
+    - scikit-image
+    - scipy
+    - einops
+    - pyyaml
+    - addict
+    - lpips
+    - onnxruntime
+
+predict: "predict.py:predict"
+
+image: "r8.im/mahird3/pixel-diffusion-child"
