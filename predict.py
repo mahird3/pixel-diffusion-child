@@ -7,6 +7,7 @@ from PIL import Image
 from io import BytesIO
 import requests
 import replicate
+from cog import Path  
 
 from huggingface_hub import hf_hub_download
 from torchvision import transforms
@@ -72,8 +73,7 @@ def upload_image_to_imgbb(pil_image: Image.Image) -> str:
     response = requests.post("https://api.imgbb.com/1/upload", files=files, params=params)
     return response.json()["data"]["url"]
 
-def predict(father_image: Image.Image, mother_image: Image.Image, gender: str) -> Image.Image:
-    # Face detection and resize
+def predict(father_image: Path, mother_image: Path, gender: str) -> Image.Image:    # Face detection and resize
     father_pil = extract_main_face(father_image).resize((128, 128))
     mother_pil = extract_main_face(mother_image).resize((128, 128))
 
