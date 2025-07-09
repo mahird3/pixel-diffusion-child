@@ -1,0 +1,17 @@
+name: mahird3/pixel-diffusion-child
+description: Generate child faces from two parent photos using diffusion + CodeFormer
+runtime: python
+entrypoint: predict.py
+input:
+  - name: father_base64
+    type: string
+    description: Base64-encoded JPEG image of father
+  - name: mother_base64
+    type: string
+    description: Base64-encoded JPEG image of mother
+  - name: gender
+    type: string
+    description: "Target gender: boy or girl"
+output:
+  type: string
+  description: Base64-encoded JPEG image
