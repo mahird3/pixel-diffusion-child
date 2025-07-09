@@ -32,11 +32,9 @@ ckpt_path = hf_hub_download(
     repo_type="model"
 )
 model = LatentDiffusionConditional.load_from_checkpoint(ckpt_path, train_dataset=None)
-model.eval().cuda()
-
-# Load age classification model (still used for flexibility, but not applying SAM)
-age_model = ViTForImageClassification.from_pretrained("nateraw/vit-age-classifier").eval().cuda()
-age_processor = ViTImageProcessor.from_pretrained("nateraw/vit-age-classifier")
+model.eval()
+if torch.cuda.is_available():
+    model.cuda()
 
 # Set up face detector
 detector = insightface.app.FaceAnalysis(name="buffalo_l", providers=["CPUExecutionProvider"])
@@ -79,9 +77,14 @@ def predict(father_image: Image.Image, mother_image: Image.Image, gender: str) -
     father_pil = extract_main_face(father_image).resize((128, 128))
     mother_pil = extract_main_face(mother_image).resize((128, 128))
 
-    f_tensor = transform(father_pil).unsqueeze(0).cuda()
-    m_tensor = transform(mother_pil).unsqueeze(0).cuda()
-    gender_tensor = torch.tensor([0 if gender.lower() == "boy" else 1]).cuda()
+    f_tensor = transform(father_pil).unsqueeze(0)
+    m_tensor = transform(mother_pil).unsqueeze(0)
+    gender_tensor = torch.tensor([0 if gender.lower() == "boy" else 1])
+
+    if torch.cuda.is_available():
+        f_tensor = f_tensor.cuda()
+        m_tensor = m_tensor.cuda()
+        gender_tensor = gender_tensor.cuda()
 
     with torch.no_grad():
         child_tensor = model.generate_from_parents(f_tensor[0], m_tensor[0], gender_tensor.item())
