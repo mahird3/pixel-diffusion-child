@@ -4,4 +4,17 @@ build:
 
 predict: "predict.py:predict"
 
-image: "r8.im/mahird3/pixel-diffusion-child"
+inputs:
+  - name: father_image
+    type: image
+    description: "Image of the father"
+  - name: mother_image
+    type: image
+    description: "Image of the mother"
+  - name: gender
+    type: string
+    description: "Target gender: boy or girl"
+    default: boy
+
+output:
+  type: image
